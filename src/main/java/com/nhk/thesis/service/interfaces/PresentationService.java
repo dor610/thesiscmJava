@@ -44,6 +44,8 @@ public interface PresentationService {
 
     String getLecturerAndTime(List<String> lst);
 
+    boolean startPresentation(String id);
+
     boolean writeLog(String id, String content);
 
     List<PresentaionLog> getAllLogById(String id);

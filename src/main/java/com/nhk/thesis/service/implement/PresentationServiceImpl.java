@@ -115,7 +115,20 @@ public class PresentationServiceImpl implements PresentationService {
 
     @Override
     public List<PresentationVO> getByCurrentSemester() {
-        return null;
+        SemesterVO semesterVO = semesterService.getCurrentSemester();
+        if(semesterVO != null) {
+            return presentationRepository.findAllBySemester(semesterVO.getId()).stream().map(presentation -> {
+                SemesterVO semester = semesterService.getSemester(presentation.getSemester());
+                StudentVO student = studentService.getStudentById(presentation.getStudent());
+                TopicVO topicVO = topicService.getTopic(presentation.getTopic());
+                UserVO president = userService.getUser(presentation.getPresident());
+                UserVO secretary = userService.getUser(presentation.getSecretary());
+                UserVO member = userService.getUser(presentation.getMember());
+                UserVO lecturer = userService.getUser(presentation.getLecturer());
+                return new PresentationVO(presentation, student, topicVO, semester, lecturer, president, secretary, member);
+            }).collect(Collectors.toList());
+        }
+        return Collections.emptyList();
     }
 
     @Override
@@ -152,7 +165,16 @@ public class PresentationServiceImpl implements PresentationService {
 
     @Override
     public List<PresentationVO> getALl() {
-        return null;
+        return presentationRepository.findAll().stream().map(presentation -> {
+            SemesterVO semester = semesterService.getSemester(presentation.getSemester());
+            StudentVO student = studentService.getStudentById(presentation.getStudent());
+            TopicVO topicVO = topicService.getTopic(presentation.getTopic());
+            UserVO president = userService.getUser(presentation.getPresident());
+            UserVO secretary = userService.getUser(presentation.getSecretary());
+            UserVO member = userService.getUser(presentation.getMember());
+            UserVO lecturer = userService.getUser(presentation.getLecturer());
+            return new PresentationVO(presentation, student, topicVO, semester, lecturer, president, secretary, member);
+        }).collect(Collectors.toList());
     }
 
     @Override
@@ -410,6 +432,19 @@ public class PresentationServiceImpl implements PresentationService {
 
         lst.remove(value);
         return value;
+    }
+
+    @Override
+    public boolean startPresentation(String id) {
+        Presentation presentation = presentationRepository.findById(id).orElse(null);
+        if(presentation != null) {
+            presentation.setStatus(PresentationStatus.HAPPENING);
+            presentationRepository.save(presentation);
+            //send notification
+            writeLog(id, "Chủ tịch hội đồng đã bắt đầu buổi báo cáo bảo vệ luận văn");
+            return true;
+        }
+        return false;
     }
 
     @Override

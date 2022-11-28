@@ -19,6 +19,8 @@ public class Student {
     private String classCode;
     private Map<String, String> courses;
     private String email;
+    private boolean isIMark;
+    private String iMarkSemester;
 
     public Student() {};
 
@@ -31,6 +33,8 @@ public class Student {
         this.dateOfBirth = dateOfBirth.getTime();
         this.classCode = classCode;
         this.email = generateEmail(name, studentCode);
+        this.isIMark = false;
+        this.iMarkSemester = "";
     }
 
     public void addCourse(String course, String semester) {
@@ -117,6 +121,22 @@ public class Student {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isIMark() {
+        return isIMark;
+    }
+
+    public void setIMark(boolean IMark) {
+        isIMark = IMark;
+    }
+
+    public String getiMarkSemester() {
+        return iMarkSemester;
+    }
+
+    public void setiMarkSemester(String iMarkSemester) {
+        this.iMarkSemester = iMarkSemester;
     }
 
     public String generateEmail(String name, String studentCode) {

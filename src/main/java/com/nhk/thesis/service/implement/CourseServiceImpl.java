@@ -1,13 +1,11 @@
 package com.nhk.thesis.service.implement;
 
-import com.nhk.thesis.entity.Course;
-import com.nhk.thesis.entity.Student;
-import com.nhk.thesis.entity.Topic;
-import com.nhk.thesis.entity.User;
+import com.nhk.thesis.entity.*;
 import com.nhk.thesis.entity.constant.CourseStatus;
 import com.nhk.thesis.entity.constant.SemesterName;
 import com.nhk.thesis.entity.vo.*;
 import com.nhk.thesis.repository.CourseRepository;
+import com.nhk.thesis.repository.ReportRepository;
 import com.nhk.thesis.repository.StudentRepository;
 import com.nhk.thesis.repository.TopicRepository;
 import com.nhk.thesis.service.interfaces.*;
@@ -35,14 +33,17 @@ public class CourseServiceImpl implements CourseService {
     private StudentRepository studentRepository;
     private TopicRepository topicRepository;
     private ResourceLoader resourceLoader;
+    private ReportRepository reportRepository;
 
     @Autowired
     public CourseServiceImpl(CourseRepository courseRepository, StudentRepository studentRepository,
-                             ResourceLoader resourceLoader, TopicRepository topicRepository) {
+                             ResourceLoader resourceLoader, TopicRepository topicRepository,
+                             ReportRepository reportRepository) {
         this.courseRepository = courseRepository;
         this.studentRepository =studentRepository;
         this.resourceLoader = resourceLoader;
         this.topicRepository = topicRepository;
+        this.reportRepository = reportRepository;
     }
 
     @Autowired
@@ -280,26 +281,37 @@ public class CourseServiceImpl implements CourseService {
             int count = 0;
             Map<Integer, String> map = new LinkedHashMap<>();
             StudentVO student = students.get(i);
+            Report report = reportRepository.findByStudent(student.getId());
             map.put(count, String.valueOf(i+1));
             count++;
             map.put(count, student.getStudentCode());
             count++;
             map.put(count, student.getNormalizedName());
             count++;
-            map.put(count, "");
+            if(report != null && report.isApproved()){
+                map.put(count, report.getFinalPoint());
+            } else {
+                map.put(count, "");
+            }
             count++;
             map.put(count, "");
             count++;
             map.put(count, "");
             count++;
             map.put(count, "");
-
+            count++;
             Topic topic = topicRepository.findBySemesterAndMemberContains(courseVO.getSemester().getId(), student.getId());
-            count++;
-            map.put(count, topic.getNormalizedName());
-            count++;
-            map.put(count, topic.getEnName());
-            dataLst.add(map);
+            if(topic != null) {
+                map.put(count, topic.getNormalizedName());
+                count++;
+                map.put(count, topic.getEnName());
+                dataLst.add(map);
+            } else {
+                map.put(count, "");
+                count++;
+                map.put(count, "");
+                dataLst.add(map);
+            }
         }
         return dataLst;
     }

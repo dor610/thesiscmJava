@@ -1,6 +1,7 @@
 package com.nhk.thesis.security.service;
 
 import com.nhk.thesis.entity.User;
+import com.nhk.thesis.entity.constant.UserRole;
 import com.nhk.thesis.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,10 +26,12 @@ public class UserSecurityServices implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
-    private List<GrantedAuthority> getAuthority(String role){
+    private List<GrantedAuthority> getAuthority(List<UserRole> role){
         Set<GrantedAuthority> roles = new HashSet<>();
 
-        roles.add(new SimpleGrantedAuthority(role));
+        role.forEach(r -> {
+            roles.add(new SimpleGrantedAuthority(r.name()));
+        });
 
         List<GrantedAuthority> list = new ArrayList<>(roles);
 
@@ -45,7 +48,7 @@ public class UserSecurityServices implements UserDetailsService {
         User user = userRepository.findUserByAccount(username);
         if(user != null){
             //System.out.println("Found user: " + username);
-            UserDetails userDetail = buildUser(user, getAuthority(user.getRole().name()));
+            UserDetails userDetail = buildUser(user, getAuthority(user.getRole()));
             System.out.println(userDetail.getAuthorities());
             return userDetail;//buildUser(user, getAuthority(user.getRole().name()));
         }else

@@ -27,4 +27,10 @@ public interface StudentService {
     List<Student> extractDataFromPDF(InputStream inputFile) throws IOException, ParseException;
 
     List<Student> search(String keyword);
+
+    void setIMark(String id);
+
+    void startIMark(String id);
+
+    void hihi();
 }

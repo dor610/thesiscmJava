@@ -19,6 +19,7 @@ public class ReportVO {
     private String finalPoint;
     private String endTime;
     private String other;
+    private String letterPoint;
 
     public ReportVO(Report report, UserVO user) {
         this.id = report.getId();
@@ -34,6 +35,7 @@ public class ReportVO {
         this.finalPoint = report.getFinalPoint();
         this.endTime = report.getEndTime();
         this.other = report.getOther();
+        this.letterPoint = report.getLetterPoint();
     }
 
     public String getId() {
@@ -138,5 +140,13 @@ public class ReportVO {
 
     public void setOther(String other) {
         this.other = other;
+    }
+
+    public String getLetterPoint() {
+        return letterPoint;
+    }
+
+    public void setLetterPoint(String letterPoint) {
+        this.letterPoint = letterPoint;
     }
 }

@@ -1,7 +1,10 @@
 package com.nhk.thesis.restApi;
 
+import com.dropbox.core.DbxException;
+import com.nhk.thesis.entity.constant.IMarkStatus;
 import com.nhk.thesis.entity.vo.CourseVO;
 import com.nhk.thesis.service.interfaces.CourseService;
+import com.nhk.thesis.service.interfaces.IMarkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,9 +21,11 @@ import java.util.List;
 public class CourseApi {
 
     private CourseService courseService;
+    private IMarkService iMarkService;
 
     @Autowired
-    public CourseApi(CourseService courseService) {
+    public CourseApi(CourseService courseService, IMarkService iMarkService) {
+        this.iMarkService = iMarkService;
         this.courseService = courseService;
     }
 
@@ -91,10 +96,93 @@ public class CourseApi {
         }
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentDispositionFormData("file", "hahaha.xlsx");
+        httpHeaders.setContentDispositionFormData("file", "diem_ct594.xlsx");
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.setContentLength(data != null? data.length: 0);
         httpHeaders.set(HttpHeaders.CONTENT_TYPE, "application/force-download");
         return new ResponseEntity<>(data, httpHeaders, HttpStatus.OK);
+    }
+
+    @GetMapping("/imark")
+    public ResponseEntity<Object> getIMark(@RequestParam("id") String id){
+        return new ResponseEntity<>(iMarkService.get(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/imark/status/lecturer")
+    public ResponseEntity<Object> getImarkByStatusAndLecturer(@RequestParam("status") String status, @RequestParam("lecturer") String lecturer){
+        if (status.equals("1"))
+            return new ResponseEntity<>(iMarkService.getByLecturerAndStatus(lecturer, IMarkStatus.NEW), HttpStatus.OK);
+        if (status.equals("2"))
+            return new ResponseEntity<>(iMarkService.getByLecturerAndStatus(lecturer, IMarkStatus.PENDING), HttpStatus.OK);
+        if (status.equals("3"))
+            return new ResponseEntity<>(iMarkService.getByLecturerAndStatus(lecturer, IMarkStatus.EXPIRED), HttpStatus.OK);
+        return new ResponseEntity<>("Sai tham số", HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/imark/status/semester")
+    public ResponseEntity<Object> getImarkByStatusAndSemester(@RequestParam("status") String status, @RequestParam("semester") String semester){
+        if (status.equals("1"))
+            return new ResponseEntity<>(iMarkService.getByStatusAndSemester(IMarkStatus.NEW, semester), HttpStatus.OK);
+        if (status.equals("2"))
+            return new ResponseEntity<>(iMarkService.getByStatusAndSemester(IMarkStatus.PENDING, semester), HttpStatus.OK);
+        if (status.equals("3"))
+            return new ResponseEntity<>(iMarkService.getByStatusAndSemester(IMarkStatus.EXPIRED, semester), HttpStatus.OK);
+        return new ResponseEntity<>("Sai tham số", HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/imark/student")
+    public ResponseEntity<Object> getStudentWithoutIMark(@RequestParam("account") String account) {
+        return new ResponseEntity<>(iMarkService.getStudentWithoutIMark(account), HttpStatus.OK);
+    }
+
+    @PostMapping("/imark")
+    public ResponseEntity<Object> createIMark(@RequestParam("studentCode") String studentCode, @RequestParam("lecturer") String lecturer,
+                                              @RequestParam("file") MultipartFile file,@RequestParam("lecturerComment") String lecturerComment,
+                                              @RequestParam("deanComment") String deanComment,@RequestParam("reason") String reason,
+                                              @RequestParam("other") String other) throws IOException, DbxException {
+        return new ResponseEntity<>(iMarkService.create(studentCode, lecturer, file, lecturerComment, deanComment, reason, other), HttpStatus.OK);
+    }
+
+    @GetMapping("/imark/confirm")
+    public ResponseEntity<Object> getConfirmIMark(@RequestParam("lecturer") String lecturer){
+        return new ResponseEntity<>(iMarkService.getByCompleteAndConfirmAndStatusAndLecturer(false, true, IMarkStatus.PENDING, lecturer), HttpStatus.OK);
+    }
+
+    @GetMapping("/imark/confirm/status")
+    public ResponseEntity<Object> getConfirmIMarkByStatus(@RequestParam("lecturer") String lecturer){
+        return new ResponseEntity<>(iMarkService.getByCompleteAndConfirmAndStatusAndLecturer(false,false, IMarkStatus.PENDING, lecturer), HttpStatus.OK);
+    }
+
+    @PostMapping("/imark/confirm")
+    public ResponseEntity<Object> confirmIMark(@RequestParam("id") String id) {
+        iMarkService.confirm(id);
+        return new ResponseEntity<>("", HttpStatus.OK);
+    }
+
+    @PostMapping("/imark/update")
+    public ResponseEntity<Object> updateIMark(@RequestParam("id") String id, @RequestParam(name = "file", required = false) MultipartFile file,
+                                              @RequestParam("lecturerComment") String lecturerComment, @RequestParam("deanComment") String deanComment,
+                                              @RequestParam("reason") String reason, @RequestParam("other") String other) throws IOException, DbxException {
+        return new ResponseEntity<>(iMarkService.update(id, file, lecturerComment, deanComment, reason, other), HttpStatus.OK);
+    }
+
+    @PostMapping("/imark/delete")
+    public ResponseEntity<Object> deleteIMark(@RequestParam("id") String id) throws DbxException {
+        return new ResponseEntity<>(iMarkService.delete(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/imark/lecturer")
+    public ResponseEntity<Object> getIMarkByLecturer(@RequestParam("lecturer") String lecturer){
+        return new ResponseEntity<>(iMarkService.getByLecturer(lecturer), HttpStatus.OK);
+    }
+
+    @GetMapping("/imark/semester")
+    public ResponseEntity<Object> getIMarkBySemester(@RequestParam("semester") String semester){
+        return new ResponseEntity<>(iMarkService.getBySemester(semester), HttpStatus.OK);
+    }
+
+    @GetMapping("/imark/all")
+    public ResponseEntity<Object> getAllIMark() {
+        return new ResponseEntity<>(iMarkService.getAll(), HttpStatus.OK);
     }
 }

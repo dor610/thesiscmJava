@@ -217,7 +217,7 @@ public class TopicServiceImpl implements TopicService {
         Topic topic = topicRepository.findById(id).orElse(null);
 
         if(topic != null) {
-            if (topic.getReportFile() != null) {
+            if (topic.getSourceCode() != null) {
                 deleteSourceFile(id);
             }
             DocumentFile document = new DocumentFile();

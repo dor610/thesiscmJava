@@ -147,6 +147,34 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.search(normalizeString(keyword));
     }
 
+    @Override
+    public void setIMark(String id) {
+        Student student = studentRepository.findById(id).orElse(null);
+        if(student != null) {
+            student.setIMark(true);
+            studentRepository.save(student);
+        }
+    }
+
+    @Override
+    public void startIMark(String id) {
+        Student student = studentRepository.findById(id).orElse(null);
+        if(student != null) {
+            SemesterVO semester = semesterService.getCurrentSemester();
+            student.setIMark(true);
+            student.setiMarkSemester(semester.getId());
+            studentRepository.save(student);
+        }
+    }
+
+    @Override
+    public void hihi() {
+        studentRepository.saveAll(studentRepository.findAll().stream().map(obj -> {
+            obj.setEmail(obj.generateEmail(normalizeString(obj.getName()), obj.getStudentCode()));
+            return obj;
+        }).collect(Collectors.toList()));
+    }
+
 
     public String normalizeString(String str) {
         return Normalizer

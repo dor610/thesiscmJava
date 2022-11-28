@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.security.SecureRandom;
+import java.util.List;
 
 @Document(collection = "user")
 public class User {
@@ -23,7 +24,7 @@ public class User {
     private String email;
     private String phone;
     private UserTitle title;
-    private UserRole role;
+    private List<UserRole> role;
     private UserStatus status;
     private boolean isOnline;
     private String activationCode;
@@ -38,7 +39,7 @@ public class User {
     }
 
     public User(String id, String account, String password, String name, String email, String phone, UserTitle title,
-                UserRole role, UserStatus status, boolean isOnline, String createdDate) {
+                List<UserRole> role, UserStatus status, boolean isOnline, String createdDate) {
         this.id = id;
         this.account = account;
         this.password = password;
@@ -52,7 +53,7 @@ public class User {
         this.createdDate = createdDate;
     }
 
-    public User(String account, String password, String name, String email, String phone, UserRole role, UserTitle title, String activationCode){
+    public User(String account, String password, String name, String email, String phone, List<UserRole> role, UserTitle title, String activationCode){
         ObjectId objectId = ObjectId.get();
         this.id = String.format("User_%s", objectId);
         this.account = account;
@@ -121,11 +122,11 @@ public class User {
         this.name = name;
     }
 
-    public UserRole getRole() {
+    public List<UserRole> getRole() {
         return role;
     }
 
-    public void setRole(UserRole role) {
+    public void setRole(List<UserRole> role) {
         this.role = role;
     }
 

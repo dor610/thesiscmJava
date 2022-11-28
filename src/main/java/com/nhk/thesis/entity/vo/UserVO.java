@@ -1,6 +1,10 @@
 package com.nhk.thesis.entity.vo;
 
 import com.nhk.thesis.entity.User;
+import com.nhk.thesis.entity.constant.UserRole;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserVO {
     private String id;
@@ -10,8 +14,8 @@ public class UserVO {
     private String title;
     private String titleCode;
     private String fullTitle;
-    private String role;
-    private String fullRole;
+    private List<String> role;
+    private List<String> fullRole;
     private String phone;
     private String status;
     private String statusCode;
@@ -20,13 +24,12 @@ public class UserVO {
     public UserVO() {
     }
 
-    public UserVO(String id, String account, String name, String email, String title, String role, String phone, String status, String createdDate) {
+    public UserVO(String id, String account, String name, String email, String title, String phone, String status, String createdDate) {
         this.id = id;
         this.account = account;
         this.name = name;
         this.email = email;
         this.title = title;
-        this.role = role;
         this.phone = phone;
         this.status = status;
         this.createdDate = createdDate;
@@ -41,8 +44,8 @@ public class UserVO {
         this.title = user.getTitle().getText();
         this.titleCode = user.getTitle().getCode();
         this.fullTitle = user.getTitle().getName();
-        this.role = user.getRole().getCode();
-        this.fullRole = user.getRole().getText();
+        this.role = user.getRole().stream().map(UserRole::getCode).collect(Collectors.toList());
+        this.fullRole = user.getRole().stream().map(UserRole::getText).collect(Collectors.toList());
         this.status = user.getStatus().getText();
         this.statusCode = user.getStatus().getCode();
         this.createdDate = user.getCreatedDate();
@@ -88,11 +91,11 @@ public class UserVO {
         this.title = title;
     }
 
-    public String getRole() {
+    public List<String> getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(List<String> role) {
         this.role = role;
     }
 
@@ -128,11 +131,11 @@ public class UserVO {
         this.fullTitle = fullTitle;
     }
 
-    public String getFullRole() {
+    public List<String> getFullRole() {
         return fullRole;
     }
 
-    public void setFullRole(String fullRole) {
+    public void setFullRole(List<String> fullRole) {
         this.fullRole = fullRole;
     }
 

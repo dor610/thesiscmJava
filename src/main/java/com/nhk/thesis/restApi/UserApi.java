@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/user")
@@ -140,7 +141,7 @@ public class UserApi {
 
     @GetMapping("/authenticate")
     public ResponseEntity<Object> checkAuthentication(@RequestParam("account") String account){
-        String result = userService.checkAuthentication(account);
+        UserVO result = userService.checkAuthentication(account);
         if(result != null)
             return new ResponseEntity<>(result, HttpStatus.OK);
         else return new ResponseEntity<>("", HttpStatus.BAD_REQUEST);

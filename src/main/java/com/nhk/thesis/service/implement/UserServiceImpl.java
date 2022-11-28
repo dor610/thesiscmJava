@@ -40,11 +40,11 @@ public class UserServiceImpl implements UserService {
     public boolean createUser(String account, String name, String email, String phone, String role, String title) throws UnirestException {
         String password = "abc";//generatePassword(10);
         String activationCode = generatePassword(10);
-        UserRole userRole = UserRole.getRoleByCode(role);
+        List<UserRole> userRoles = Arrays.asList(role.split(",")).stream().map(UserRole::getRoleByCode).collect(Collectors.toList());
         if (userRepository.existsByAccount(account)) {
             return false;
         }
-        User user = new User(account, password, name, email, phone, userRole, UserTitle.getUserTitleByCode(title), activationCode);
+        User user = new User(account, password, name, email, phone, userRoles, UserTitle.getUserTitleByCode(title), activationCode);
         userRepository.insert(user);
         mailService.sendAccountActivationEmail(user, password);
         userLogService.writeLog(user.getId(), UserLogType.CREATE, System.currentTimeMillis()+"","Người dùng được tạo mới", "" );
@@ -175,10 +175,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String checkAuthentication(String account) {
-        if(userRepository.existsByAccount(account))
-            return account;
-        return null;
+    public UserVO checkAuthentication(String account) {
+        return getUserByAccount(account);
     }
 
     @Override

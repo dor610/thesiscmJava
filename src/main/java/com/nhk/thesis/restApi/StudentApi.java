@@ -44,8 +44,24 @@ public class StudentApi {
         return  new ResponseEntity<>(student, HttpStatus.OK);
     }
 
+    @GetMapping("/code")
+    public ResponseEntity<Object> getStudentByCode(@RequestParam("code") String code){
+        StudentVO student = studentService.getStudent(code);
+        if(student == null) {
+            return new ResponseEntity<>("Không tồn tại dữ liệu về sinh viên", HttpStatus.BAD_REQUEST);
+        }
+
+        return  new ResponseEntity<>(student, HttpStatus.OK);
+    }
+
     @GetMapping("/search")
     public ResponseEntity<Object> search(@RequestParam("keyWord") String keyWord) {
         return new ResponseEntity<>(studentService.search(keyWord), HttpStatus.OK);
     }
+
+    @GetMapping("/hihi")
+    public void hihi() {
+        studentService.hihi();
+    }
+
 }

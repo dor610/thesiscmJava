@@ -31,19 +31,24 @@ public class ReportApi {
         return new ResponseEntity<>(report, HttpStatus.OK);
     }
 
+    @GetMapping("/mark")
+    public ResponseEntity<Object> getStudentMark(@RequestParam("student") String student){
+        return new ResponseEntity<>(reportService.getStudentMark(student), HttpStatus.OK);
+    }
+
     @PostMapping("/save")
     public ResponseEntity<Object> save(@RequestParam("presentation") String presentation, @RequestParam("account") String account,
                                        @RequestParam("qna") String qna, @RequestParam("advices") String advices, @RequestParam("comment") String comment,
                                        @RequestParam("result") String result, @RequestParam("finalPoint") String finalPoint, @RequestParam("endTime") String endTime,
-                                       @RequestParam("other") String other) {
-        return new ResponseEntity<>(reportService.save(presentation, account, qna, advices, comment, result, finalPoint, endTime, other), HttpStatus.OK);
+                                       @RequestParam("other") String other, @RequestParam("student") String student) {
+        return new ResponseEntity<>(reportService.save(presentation, account, student, qna, advices, comment, result, finalPoint, endTime, other), HttpStatus.OK);
     }
     @PostMapping("/submit")
     public ResponseEntity<Object> submit(@RequestParam("presentation") String presentation, @RequestParam("account") String account,
                                        @RequestParam("qna") String qna, @RequestParam("advices") String advices, @RequestParam("comment") String comment,
                                        @RequestParam("result") String result, @RequestParam("finalPoint") String finalPoint, @RequestParam("endTime") String endTime,
-                                       @RequestParam("other") String other) {
-        return new ResponseEntity<>(reportService.submit(presentation, account, qna, advices, comment, result, finalPoint, endTime, other), HttpStatus.OK);
+                                       @RequestParam("other") String other, @RequestParam("student") String student) {
+        return new ResponseEntity<>(reportService.submit(presentation, account, student, qna, advices, comment, result, finalPoint, endTime, other), HttpStatus.OK);
     }
 
     @PostMapping("/approve")

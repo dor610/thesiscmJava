@@ -13,6 +13,8 @@ public interface PresentationRepository extends MongoRepository<Presentation, St
 
     List<Presentation> findByTopic(String topic);
 
+    boolean existsByStudent(String student);
+
     List<Presentation> findAllBySemester(String semester);
 
     List<Presentation> findAllByStudent(String student);

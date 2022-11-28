@@ -4,7 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public enum UserRole {
-    ADMIN("3", "Trưởng bộ môn"), CO_ADMIN("2", "Thư ký bộ môn"), USER("1", "Giảng viên");
+    ADMIN("3", "Trưởng bộ môn"), CO_ADMIN("2", "Thư ký bộ môn"), USER("1", "Giảng viên"), MARKER("0", "Uỷ Viên");
 
     private String code;
     private String text;

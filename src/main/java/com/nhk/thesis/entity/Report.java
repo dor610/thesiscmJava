@@ -13,6 +13,7 @@ public class Report {
     private String id;
 
     private String creator;
+    private String student;
     private String timestamp;
     private boolean isApproved;
     private boolean isSubmitted;
@@ -22,14 +23,16 @@ public class Report {
     private String comment;
     private String result;
     private String finalPoint;
+    private String letterPoint;
     private String endTime;
     private String other;
 
     public Report(){}
 
-    public Report(String creator, String presentation, String qna, String advices, String comment, String result, String finalPoint, String endTime, String other) {
+    public Report(String creator, String student, String presentation, String qna, String advices, String comment, String result, String finalPoint, String endTime, String other) {
         ObjectId id = ObjectId.get();
         this.id = "Report_" + id;
+        this.student = student;
         this.timestamp = String.valueOf(System.currentTimeMillis());
         this.isApproved = false;
         this.isSubmitted = false;
@@ -42,6 +45,7 @@ public class Report {
         this.comment = comment;
         this.result = result;
         this.finalPoint = finalPoint;
+        this.letterPoint = numberToLetter(Double.parseDouble(finalPoint));
     }
 
     public String getId() {
@@ -146,5 +150,31 @@ public class Report {
 
     public void setOther(String other) {
         this.other = other;
+    }
+
+    public String getLetterPoint() {
+        return letterPoint;
+    }
+
+    public void setLetterPoint(String letterPoint) {
+        this.letterPoint = letterPoint;
+    }
+
+    private String numberToLetter(double number){
+        if(number < 4)
+            return "F";
+        if(number < 5)
+            return "D";
+        if(number < 5.5)
+            return "D+";
+        if(number < 6.5)
+            return "C";
+        if(number < 7)
+            return "C+";
+        if(number < 8)
+            return "B";
+        if(number < 9)
+            return "B+";
+        return "A";
     }
 }

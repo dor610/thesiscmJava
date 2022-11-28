@@ -15,6 +15,8 @@ public class StudentVO {
     private Map<String, String> courses;
     private String classCode;
     private String email;
+    private boolean isIMark;
+    private String iMarkSemester;
 
     public StudentVO() {
     }
@@ -28,6 +30,8 @@ public class StudentVO {
         this.normalizedName = student.getNormalizedName();
         this.courses = student.getCourses();
         this.email = student.getEmail();
+        this.iMarkSemester = student.getiMarkSemester();
+        this.isIMark = student.isIMark();
     }
 
     public String getId() {
@@ -92,5 +96,21 @@ public class StudentVO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isIMark() {
+        return isIMark;
+    }
+
+    public void setIMark(boolean IMark) {
+        isIMark = IMark;
+    }
+
+    public String getiMarkSemester() {
+        return iMarkSemester;
+    }
+
+    public void setiMarkSemester(String iMarkSemester) {
+        this.iMarkSemester = iMarkSemester;
     }
 }

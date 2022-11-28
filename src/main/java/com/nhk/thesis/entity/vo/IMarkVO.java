@@ -7,12 +7,21 @@ import java.util.List;
 
 public class IMarkVO {
     private String id;
+
     private StudentVO student;
     private UserVO lecturer;
     private String timestamp;
+    private String expirationDate;
     private DocumentFile document;
-    private List<String> documentContent;
+    private String deanComment;
+    private String lecturerComment;
+    private String reason;
+    private String status;
+    private String statusCode;
     private SemesterVO semester;
+    private String other;
+    private boolean confirm;
+    private boolean complete;
 
     public IMarkVO() {}
 
@@ -22,8 +31,16 @@ public class IMarkVO {
         this.student = student;
         this.lecturer = user;
         this.document = iMark.getDocument();
-        this.documentContent = iMark.getDocumentContent();
         this.semester = semester;
+        this.expirationDate = iMark.getExpirationDate();
+        this.deanComment = iMark.getDeanComment();
+        this.lecturerComment = iMark.getLecturerComment();
+        this.reason = iMark.getReason();
+        this.other = iMark.getOther();
+        this.status = iMark.getStatus().getText();
+        this.statusCode = iMark.getStatus().getCode();
+        this.confirm = iMark.isConfirm();
+        this.complete = iMark.isComplete();
     }
 
     public String getId() {
@@ -58,6 +75,14 @@ public class IMarkVO {
         this.timestamp = timestamp;
     }
 
+    public String getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(String expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
     public DocumentFile getDocument() {
         return document;
     }
@@ -66,12 +91,28 @@ public class IMarkVO {
         this.document = document;
     }
 
-    public List<String> getDocumentContent() {
-        return documentContent;
+    public String getDeanComment() {
+        return deanComment;
     }
 
-    public void setDocumentContent(List<String> documentContent) {
-        this.documentContent = documentContent;
+    public void setDeanComment(String deanComment) {
+        this.deanComment = deanComment;
+    }
+
+    public String getLecturerComment() {
+        return lecturerComment;
+    }
+
+    public void setLecturerComment(String lecturerComment) {
+        this.lecturerComment = lecturerComment;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 
     public SemesterVO getSemester() {
@@ -80,5 +121,45 @@ public class IMarkVO {
 
     public void setSemester(SemesterVO semester) {
         this.semester = semester;
+    }
+
+    public String getOther() {
+        return other;
+    }
+
+    public void setOther(String other) {
+        this.other = other;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatusCode() {
+        return statusCode;
+    }
+
+    public void setStatusCode(String statusCode) {
+        this.statusCode = statusCode;
+    }
+
+    public boolean isConfirm() {
+        return confirm;
+    }
+
+    public void setConfirm(boolean confirm) {
+        this.confirm = confirm;
+    }
+
+    public boolean isComplete() {
+        return complete;
+    }
+
+    public void setComplete(boolean complete) {
+        this.complete = complete;
     }
 }

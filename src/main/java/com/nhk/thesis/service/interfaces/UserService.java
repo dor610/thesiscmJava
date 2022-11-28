@@ -1,6 +1,7 @@
 package com.nhk.thesis.service.interfaces;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.nhk.thesis.entity.User;
 import com.nhk.thesis.entity.constant.UserStatus;
 import com.nhk.thesis.entity.constant.UserTitle;
 import com.nhk.thesis.entity.vo.UserVO;
@@ -34,7 +35,7 @@ public interface UserService {
 
     UserVO getUserByAccount(String account);
 
-    String checkAuthentication(String account);
+    UserVO checkAuthentication(String account);
 
     List<UserVO> findUserByStatus(UserStatus status);
 

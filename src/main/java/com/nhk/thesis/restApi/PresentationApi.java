@@ -37,6 +37,16 @@ public class PresentationApi {
         return new ResponseEntity<>(presentationService.getByTopicId(id), HttpStatus.OK);
     }
 
+    @GetMapping("/semester/current")
+    public ResponseEntity<Object> getByCurrentSemester(){
+        return new ResponseEntity<>(presentationService.getByCurrentSemester(), HttpStatus.OK);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<Object> getAll() {
+        return new ResponseEntity<>(presentationService.getALl(), HttpStatus.OK);
+    }
+
     @GetMapping("/account/current")
     public ResponseEntity<Object> getByAccountInCurrentSemester(@RequestParam("account") String account) {
         return new ResponseEntity(presentationService.getByAccountInCurrentSemester(account), HttpStatus.OK);
