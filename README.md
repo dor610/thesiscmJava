@@ -14,3 +14,6 @@ Nếu trong quá trình khởi động xuất hiện lỗi liên quan đến cá
  * _MongoDb Atlas được config trong resources/application.properties_
  * _Dropbox được config trong utils/DropboxUtils.java_
  * _Mailgun được config trong service/implement/MailServiceImpl.java_
+ 
+Để có thể quan sát dữ liệu của ứng dụng có thể dùng ứng dụng MongoDBCompass để kết nối đển MongoDB Atlas.
+Connection string được lưu trữ trong file resources/application.properties
