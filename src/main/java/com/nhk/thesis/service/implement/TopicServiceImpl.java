@@ -346,6 +346,15 @@ public class TopicServiceImpl implements TopicService {
         return false;
     }
 
+    @Override
+    public void test() {
+        List<Topic> topic = topicRepository.findAll();
+        for (Topic t: topic) {
+            t.setNormalizedName(normalizeString(t.getName()));
+        }
+        topicRepository.saveAll(topic);
+    }
+
     public String normalizeString(String str) {
         return Normalizer
                 .normalize(str, Normalizer.Form.NFD)

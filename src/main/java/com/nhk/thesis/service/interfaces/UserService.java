@@ -2,6 +2,7 @@ package com.nhk.thesis.service.interfaces;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.nhk.thesis.entity.User;
+import com.nhk.thesis.entity.constant.UserRole;
 import com.nhk.thesis.entity.constant.UserStatus;
 import com.nhk.thesis.entity.constant.UserTitle;
 import com.nhk.thesis.entity.vo.UserVO;
@@ -28,6 +29,8 @@ public interface UserService {
     List<UserVO> getDisabledUser();
 
     List<UserVO> getInactivatedUser();
+
+    List<UserVO> findByRole(UserRole role);
 
     List<UserVO> search(String keyword);
 

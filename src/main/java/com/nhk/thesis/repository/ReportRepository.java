@@ -10,5 +10,7 @@ public interface ReportRepository extends MongoRepository<Report, String> {
 
     Report findByPresentation(String presentation);
 
+    Report findByStudentAndPresentation(String student, String presentation);
+
     Report findByStudent(String student);
 }

@@ -110,7 +110,14 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     @Override
-    public boolean updateSemester(String id, String startDate, String endDate, int numberOfWeek) {
+    public boolean updateSemester(String id, long startDate, long endDate, int numberOfWeek, String code) {
+        Semester semester = semesterRepository.findById(id).orElse(null);
+        if(semester != null) {
+            Semester sem = new Semester(startDate, endDate, numberOfWeek, code);
+            sem.setId(semester.getId());
+            semesterRepository.save(sem);
+            return true;
+        }
         return false;
     }
 

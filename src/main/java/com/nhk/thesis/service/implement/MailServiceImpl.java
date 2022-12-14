@@ -25,21 +25,38 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public JsonNode sendAccountActivationEmail(User user, String rawPassword) throws UnirestException {
-        return null;
+        HttpResponse<JsonNode> request = Unirest.post("https://api.mailgun.net/v3/mail.thesiscm.tech/messages")
+                .basicAuth("api", "c06e7bb58838714c444982f592d49ddd-4534758e-d1085791")
+                .queryString("from", "Hệ thống quản lý luận văn <USER@mail.thesiscm.tech>")
+                .queryString("to", user.getEmail())
+                .queryString("subject", "Kích hoạt tài khoản")
+                .queryString("text", "Tài khoản của bạn đã được tạo.\nTruy cập vào liên kết được gửi kèm để kích hoạt tài khoản: ")
+                .asJson();
+        return request.getBody();
     }
 
     @Override
-    public JsonNode sendAccountDisabledEmail() throws UnirestException {
-        return null;
+    public JsonNode sendAccountDisabledEmail(User user) throws UnirestException {
+        HttpResponse<JsonNode> request = Unirest.post("https://api.mailgun.net/v3/mail.thesiscm.tech/messages")
+                .basicAuth("api", "c06e7bb58838714c444982f592d49ddd-4534758e-d1085791")
+                .queryString("from", "Hệ thống quản lý luận văn <USER@mail.thesiscm.tech>")
+                .queryString("to", user.getEmail())
+                .queryString("subject", "Vô hiệu hoá tài khoản")
+                .queryString("text", "Tài khoản của bạn đã bị vô hiệu hoá. Liên hệ với người quản lý để biết thêm chi tiết.")
+                .asJson();
+        return request.getBody();
     }
 
     @Override
-    public JsonNode sendAccountEnableEmail() throws UnirestException {
-        return null;
+    public JsonNode sendAccountEnableEmail(User user) throws UnirestException {
+        HttpResponse<JsonNode> request = Unirest.post("https://api.mailgun.net/v3/mail.thesiscm.tech/messages")
+                .basicAuth("api", "c06e7bb58838714c444982f592d49ddd-4534758e-d1085791")
+                .queryString("from", "Hệ thống quản lý luận văn <USER@mail.thesiscm.tech>")
+                .queryString("to", user.getEmail())
+                .queryString("subject", "Tài khoản được kích hoạt")
+                .queryString("text", "Tài khoản của bạn đã được kích hoạt, bạn đã có thể truy cập vào hệ thống")
+                .asJson();
+        return request.getBody();
     }
 
-    @Override
-    public JsonNode sendPasswordChangedEmail() throws UnirestException {
-        return null;
-    }
 }

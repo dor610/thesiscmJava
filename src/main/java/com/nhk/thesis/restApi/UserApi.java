@@ -3,6 +3,7 @@ package com.nhk.thesis.restApi;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.nhk.thesis.entity.User;
 import com.nhk.thesis.entity.UserLog;
+import com.nhk.thesis.entity.constant.UserRole;
 import com.nhk.thesis.entity.constant.UserStatus;
 import com.nhk.thesis.entity.vo.UserLogVO;
 import com.nhk.thesis.entity.vo.UserVO;
@@ -137,6 +138,19 @@ public class UserApi {
 
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
+
+    @GetMapping("/get-by-role")
+    public ResponseEntity<Object> getUserByRole(@RequestParam("role") String role){
+        if(role.equals("0"))
+            return new ResponseEntity<>(userService.findByRole(UserRole.MARKER), HttpStatus.OK);
+        if(role.equals("1"))
+            return new ResponseEntity<>(userService.findByRole(UserRole.USER), HttpStatus.OK);
+        if(role.equals("2"))
+            return new ResponseEntity<>(userService.findByRole(UserRole.CO_ADMIN), HttpStatus.OK);
+
+        return new ResponseEntity<>(userService.findByRole(UserRole.ADMIN), HttpStatus.OK);
+    }
+
 
 
     @GetMapping("/authenticate")

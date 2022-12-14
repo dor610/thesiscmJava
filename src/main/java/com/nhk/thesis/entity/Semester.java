@@ -35,6 +35,13 @@ public class Semester {
         calendar.setTime(new Date(endDate));
         this.endYear = calendar.get(Calendar.YEAR) + "";
         this.semesterName = SemesterName.getSemesterByCode(semesterCode);
+        if(Integer.parseInt(this.endYear) == Integer.parseInt(this.startYear)){
+            if(this.semesterName.equals(SemesterName.FIRST_SEMESTER)){
+                this.endYear = String.valueOf(Integer.parseInt(this.endYear) + 1);
+            }else {
+                this.startYear = String.valueOf(Integer.parseInt(this.startYear) - 1);
+            }
+        }
     }
 
     public String getId() {

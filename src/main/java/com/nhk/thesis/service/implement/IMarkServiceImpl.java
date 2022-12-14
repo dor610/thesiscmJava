@@ -1,6 +1,7 @@
 package com.nhk.thesis.service.implement;
 
 import com.dropbox.core.DbxException;
+import com.nhk.thesis.entity.Course;
 import com.nhk.thesis.entity.IMark;
 import com.nhk.thesis.entity.Topic;
 import com.nhk.thesis.entity.common.DocumentFile;
@@ -197,6 +198,39 @@ public class IMarkServiceImpl implements IMarkService {
             }).collect(Collectors.toList());
         }
         return null;
+    }
+
+    @Override
+    public List<Integer> getCountIMarkByUserAndSemester(String account, String semester) {
+        UserVO user = userService.getUserByAccount(account);
+        if(user == null){
+            return Collections.emptyList();
+        }
+        Course course = courseService.getCourseByUserAndSemester(user.getId(), semester);
+        List<Integer> list = new ArrayList<>();
+        if(course != null) {
+            List<IMark> iMarks = iMarkRepository.findAllByLecturerAndSemester(user.getId(), semester);
+            list.add(iMarks.size());
+            list.add(course.getStudents().size() - iMarks.size());
+        } else {
+            list.add(0);
+            list.add(0);
+        }
+        return list;
+    }
+
+    @Override
+    public List<Integer> getCountIMarkBySemester(String semester) {
+        List<IMark> list = iMarkRepository.findAllBySemester(semester);
+        List<Integer> list1 = new ArrayList<>();
+        list1.add(list.size());
+        Integer count = 0;
+        List<CourseVO> courseVOS = courseService.getCoursesBySemester(semester);
+        for (CourseVO c: courseVOS){
+            count += c.getStudents().size();
+        }
+        list1.add(count - list.size());
+        return list1;
     }
 
     @Override

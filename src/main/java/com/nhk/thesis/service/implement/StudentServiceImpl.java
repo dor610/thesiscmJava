@@ -171,6 +171,7 @@ public class StudentServiceImpl implements StudentService {
     public void hihi() {
         studentRepository.saveAll(studentRepository.findAll().stream().map(obj -> {
             obj.setEmail(obj.generateEmail(normalizeString(obj.getName()), obj.getStudentCode()));
+            obj.setNormalizedName(normalizeString(obj.getName()));
             return obj;
         }).collect(Collectors.toList()));
     }

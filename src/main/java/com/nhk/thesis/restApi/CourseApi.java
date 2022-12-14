@@ -49,6 +49,11 @@ public class CourseApi {
         return new ResponseEntity<>(courseService.getCourseByStudent(student), HttpStatus.OK);
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<Object> getNumberOfStudent(@RequestParam("semester") String semester){
+        return new ResponseEntity<>(courseService.countCourseAndStudent(semester), HttpStatus.OK);
+    }
+
     @GetMapping("/all")
     public ResponseEntity<Object> getAllCourses() {
         List<CourseVO> courses = courseService.getAllCourses();
@@ -174,6 +179,17 @@ public class CourseApi {
     @GetMapping("/imark/lecturer")
     public ResponseEntity<Object> getIMarkByLecturer(@RequestParam("lecturer") String lecturer){
         return new ResponseEntity<>(iMarkService.getByLecturer(lecturer), HttpStatus.OK);
+    }
+
+
+    @GetMapping("/imark/user-semester")
+    public ResponseEntity<Object> countIMarkByUserAndSemester(@RequestParam("account") String account, @RequestParam("semester") String semester){
+        return new ResponseEntity<>(iMarkService.getCountIMarkByUserAndSemester(account, semester), HttpStatus.OK);
+    }
+
+    @GetMapping("/imark/count/semester")
+    public ResponseEntity<Object> countIMarkBySemester(@RequestParam("semester") String semester) {
+        return new ResponseEntity<>(iMarkService.getCountIMarkBySemester(semester), HttpStatus.OK);
     }
 
     @GetMapping("/imark/semester")

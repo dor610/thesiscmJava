@@ -39,7 +39,6 @@ public class UserSecurityServices implements UserDetailsService {
     }
 
     private UserDetails buildUser(User user, List<GrantedAuthority> list){
-        //System.out.println("authority: " +list.get(0));
         return new org.springframework.security.core.userdetails.User(user.getAccount(), user.getPassword(), list);
     }
 
@@ -47,10 +46,8 @@ public class UserSecurityServices implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findUserByAccount(username);
         if(user != null){
-            //System.out.println("Found user: " + username);
             UserDetails userDetail = buildUser(user, getAuthority(user.getRole()));
-            System.out.println(userDetail.getAuthorities());
-            return userDetail;//buildUser(user, getAuthority(user.getRole().name()));
+            return userDetail;
         }else
             throw new UsernameNotFoundException("Email not found!");
     }

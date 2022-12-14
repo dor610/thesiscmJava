@@ -1,7 +1,12 @@
 package com.nhk.thesis.entity.constant;
 
 public enum NotificationType {
-    INFO("1", "Thông báo"), WARN("2", "Cảnh báo"), REMIND("3", "Nhắc nhở");
+    BEGIN("1", "Bắt đầu buổi báo cáo"),
+    POINT_APPROVE("2", "Xác nhận điểm"),
+    POINT_RE_APPROVE("3", "Chỉnh sửa bản điểm"),
+    REPORT_SEND("4", "Gửi xác nhận báo cáo"),
+    REPORT_CHANGE("5","Chỉnh sửa báo cáo"),
+    REPORT_APPROVE("6", "Báo cáo được xác nhận");
 
     private String code;
     private String text;

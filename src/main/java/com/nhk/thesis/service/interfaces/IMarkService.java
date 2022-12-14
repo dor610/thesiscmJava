@@ -28,6 +28,10 @@ public interface IMarkService {
 
     List<IMarkVO> getByConfirmStatusAndLecturer(boolean confirm, String lecturer);
 
+    List<Integer> getCountIMarkByUserAndSemester(String account, String semester);
+
+    List<Integer> getCountIMarkBySemester(String semester);
+
     List<IMarkVO> getByConfirmAndStatusAndLecturer(boolean confirm,IMarkStatus status, String lecturer);
 
     List<IMarkVO> getByCompleteAndConfirmAndStatusAndLecturer(boolean complete, boolean confirm,IMarkStatus status, String lecturer);

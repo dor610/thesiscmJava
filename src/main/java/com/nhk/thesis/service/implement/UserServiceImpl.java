@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
             if(UserStatus.ENABLED.equals(user.getStatus())) {
                 user.setStatus(UserStatus.DISABLED);
                 userRepository.save(user);
-                mailService.sendAccountDisabledEmail();
+                mailService.sendAccountDisabledEmail(user);
                 userLogService.writeLog(user.getId(), UserLogType.DEACTIVATE, String.valueOf(System.currentTimeMillis()),
                         "Vô hiệu hoá người dùng", "");
                 return true;
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
             if(UserStatus.DISABLED.equals(user.getStatus())) {
                 user.setStatus(UserStatus.ENABLED);
                 userRepository.save(user);
-                mailService.sendAccountEnableEmail();
+                mailService.sendAccountEnableEmail(user);
                 userLogService.writeLog(user.getId(), UserLogType.ACTIVATE, String.valueOf(System.currentTimeMillis()), "Kích hoạt tài khoản người dùng", "");
                 return true;
             } else {
@@ -115,7 +115,6 @@ public class UserServiceImpl implements UserService {
         if(user != null && !passwordEncoder.matches(password, user.getPassword())) {
             user.setPassword(passwordEncoder.encode(password));
             userRepository.save(user);
-            mailService.sendPasswordChangedEmail();
             return true;
         }
 
@@ -152,6 +151,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserVO> getInactivatedUser() {
         List<User> users =  userRepository.findUserByStatus(UserStatus.INACTIVATE);
+        return users.stream().map((u) -> { return new UserVO(u);}).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserVO> findByRole(UserRole role) {
+        List<User> users =  userRepository.findByRoleContains(role);
         return users.stream().map((u) -> { return new UserVO(u);}).collect(Collectors.toList());
     }
 

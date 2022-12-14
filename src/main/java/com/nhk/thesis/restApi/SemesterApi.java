@@ -65,7 +65,13 @@ public class SemesterApi {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<Object> updateSemester() {
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Object> updateSemester(@RequestParam("startDate") long startDate,
+                                                 @RequestParam("endDate") long endDate,
+                                                 @RequestParam("numberOfWeek") int numberOfWeek,
+                                                 @RequestParam("code") String code,
+                                                 @RequestParam("id") String id) {
+        if(semesterService.updateSemester(id, startDate, endDate, numberOfWeek, code))
+            return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

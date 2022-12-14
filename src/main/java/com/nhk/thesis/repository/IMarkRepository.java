@@ -13,7 +13,11 @@ public interface IMarkRepository extends MongoRepository<IMark, String> {
 
     IMark findByStudentCode(String studentCode);
 
+    IMark findAllByStudentCodeAndSemester(String studentCode, String semester);
+
     List<IMark> findByLecturerAndStatus(String lecturer, IMarkStatus status);
+
+    List<IMark> findAllByLecturerAndSemester(String lecturer, String semester);
 
     List<IMark> findByStatus(IMarkStatus status);
 

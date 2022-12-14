@@ -1,9 +1,11 @@
 package com.nhk.thesis.service.implement;
 
+import com.nhk.thesis.entity.Notification;
 import com.nhk.thesis.entity.PresentaionLog;
 import com.nhk.thesis.entity.Presentation;
 import com.nhk.thesis.entity.User;
 import com.nhk.thesis.entity.constant.DaySession;
+import com.nhk.thesis.entity.constant.NotificationType;
 import com.nhk.thesis.entity.constant.PresentationStatus;
 import com.nhk.thesis.entity.vo.*;
 import com.nhk.thesis.repository.PresentationLogRepository;
@@ -31,17 +33,19 @@ public class PresentationServiceImpl implements PresentationService {
     private SemesterService semesterService;
     private PresentationRepository presentationRepository;
     private PresentationLogRepository presentationLogRepository;
+    private NotificationService notificationService;
 
     @Autowired
     public PresentationServiceImpl(StudentService studentService, UserService userService, TopicService topicService,
                                    PresentationRepository presentationRepository, SemesterService semesterService,
-                                   PresentationLogRepository presentationLogRepository) {
+                                   PresentationLogRepository presentationLogRepository, NotificationService notificationService) {
         this.semesterService = semesterService;
         this.userService = userService;
         this.studentService = studentService;
         this.topicService = topicService;
         this.presentationRepository = presentationRepository;
         this.presentationLogRepository = presentationLogRepository;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -72,18 +76,21 @@ public class PresentationServiceImpl implements PresentationService {
     @Override
     public List<PresentationVO> getByAccountInCurrentSemester(String account) {
         SemesterVO semester = semesterService.getCurrentSemester();
+        System.out.println(semester.getId());
         List<PresentationVO> list = new ArrayList<>();
         UserVO user = userService.getUserByAccount(account);
         if(semester != null && user != null) {
-            presentationRepository.findAllByPresidentOrSecretaryOrMemberAndSemester(user.getId(), user.getId(), user.getId(), semester.getId()).forEach(
+            presentationRepository.findAllByPresidentOrSecretaryOrMember(user.getId(), user.getId(), user.getId()).forEach(
                     presentation -> {
-                        StudentVO student = studentService.getStudentById(presentation.getStudent());
-                        TopicVO topic = topicService.getTopic(presentation.getTopic());
-                        UserVO president = userService.getUser(presentation.getPresident());
-                        UserVO secretary = userService.getUser(presentation.getSecretary());
-                        UserVO member = userService.getUser(presentation.getMember());
-                        UserVO lecturer = userService.getUser(presentation.getLecturer());
-                        list.add(new PresentationVO(presentation, student, topic, semester, lecturer, president, secretary, member));
+                        if(presentation.getSemester().equals(semester.getId())) {
+                            StudentVO student = studentService.getStudentById(presentation.getStudent());
+                            TopicVO topic = topicService.getTopic(presentation.getTopic());
+                            UserVO president = userService.getUser(presentation.getPresident());
+                            UserVO secretary = userService.getUser(presentation.getSecretary());
+                            UserVO member = userService.getUser(presentation.getMember());
+                            UserVO lecturer = userService.getUser(presentation.getLecturer());
+                            list.add(new PresentationVO(presentation, student, topic, semester, lecturer, president, secretary, member));
+                        }
                     }
             );
         }
@@ -252,6 +259,26 @@ public class PresentationServiceImpl implements PresentationService {
                 }
             }
 
+        }
+    }
+
+    @Override
+    public void start(String presentation) {
+        Presentation p = presentationRepository.findById(presentation).orElse(null);
+        if(p != null && p.getStatus().equals(PresentationStatus.UPCOMING)) {
+            p.setStatus(PresentationStatus.HAPPENING);
+            presentationRepository.save(p);
+            UserVO president = userService.getUser(p.getPresident());
+            writeLog(p.getId(), president.getTitle() +". " + president.getName() + " đã bắt đầu buổi báo cáo luận văn.");
+            Notification notification = new Notification(president.getTitle() +". " + president.getName() + " đã bắt đầu buổi báo cáo luận văn.", NotificationType.BEGIN);
+            notification.setRecipient(president.getAccount());
+            notificationService.sendNotification(notification);
+            UserVO secretary = userService.getUser(p.getSecretary());
+            notification.setRecipient(secretary.getAccount());
+            notificationService.sendNotification(notification);
+            UserVO member = userService.getUser(p.getMember());
+            notification.setRecipient(member.getAccount());
+            notificationService.sendNotification(notification);
         }
     }
 

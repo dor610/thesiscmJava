@@ -15,6 +15,8 @@ import java.util.Map;
 public interface CourseService {
     CourseVO getCourse(String id);
 
+    Course getCourseByUserAndSemester(String user, String semester);
+
     List<CourseVO> getCurrentCourses();
 
     List<CourseVO> getCoursesBySemester(String semester);
@@ -26,6 +28,8 @@ public interface CourseService {
     CourseVO getCurrentCourseByAccount(String account);
 
     List<CourseVO> getCourseByStudent(String student);
+
+    Map<String, Integer> countCourseAndStudent(String semester);
 
     boolean deleteCourse(String id);
 

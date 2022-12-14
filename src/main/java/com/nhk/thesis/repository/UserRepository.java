@@ -1,6 +1,7 @@
 package com.nhk.thesis.repository;
 
 import com.nhk.thesis.entity.User;
+import com.nhk.thesis.entity.constant.UserRole;
 import com.nhk.thesis.entity.constant.UserStatus;
 import com.nhk.thesis.entity.constant.UserTitle;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -16,4 +17,6 @@ public interface UserRepository extends MongoRepository<User, String> {
     public List<User> findUserByStatus(UserStatus status);
 
     User findUserByNameAndTitle(String name, UserTitle title);
+
+    List<User> findByRoleContains(UserRole role);
 }

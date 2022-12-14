@@ -2,12 +2,10 @@ package com.nhk.thesis.service.implement;
 
 import com.nhk.thesis.entity.*;
 import com.nhk.thesis.entity.constant.CourseStatus;
+import com.nhk.thesis.entity.constant.IMarkStatus;
 import com.nhk.thesis.entity.constant.SemesterName;
 import com.nhk.thesis.entity.vo.*;
-import com.nhk.thesis.repository.CourseRepository;
-import com.nhk.thesis.repository.ReportRepository;
-import com.nhk.thesis.repository.StudentRepository;
-import com.nhk.thesis.repository.TopicRepository;
+import com.nhk.thesis.repository.*;
 import com.nhk.thesis.service.interfaces.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
@@ -34,16 +32,21 @@ public class CourseServiceImpl implements CourseService {
     private TopicRepository topicRepository;
     private ResourceLoader resourceLoader;
     private ReportRepository reportRepository;
+    private IMarkRepository iMarkRepository;
+    private PresentationRepository presentationRepository;
 
     @Autowired
     public CourseServiceImpl(CourseRepository courseRepository, StudentRepository studentRepository,
                              ResourceLoader resourceLoader, TopicRepository topicRepository,
-                             ReportRepository reportRepository) {
+                             ReportRepository reportRepository, IMarkRepository iMarkRepository,
+                             PresentationRepository presentationRepository) {
         this.courseRepository = courseRepository;
         this.studentRepository =studentRepository;
         this.resourceLoader = resourceLoader;
         this.topicRepository = topicRepository;
         this.reportRepository = reportRepository;
+        this.iMarkRepository = iMarkRepository;
+        this.presentationRepository = presentationRepository;
     }
 
     @Autowired
@@ -69,6 +72,11 @@ public class CourseServiceImpl implements CourseService {
             return courseVO;
         }
         return null;
+    }
+
+    @Override
+    public Course getCourseByUserAndSemester(String user, String semester) {
+        return courseRepository.getCourseByLecturerAndSemester(user, semester);
     }
 
     @Override
@@ -155,6 +163,19 @@ public class CourseServiceImpl implements CourseService {
             UserVO user = userService.getUser(course.getLecturer());
             return new CourseVO(course, semester, user);
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public Map<String, Integer> countCourseAndStudent(String semester) {
+        List<Course> courses = courseRepository.getCourseBySemester(semester);
+        Map<String, Integer> count = new HashMap<>();
+        Integer numberOfStudent = 0;
+        for(Course course: courses) {
+            numberOfStudent += course.getStudents().size();
+        }
+        count.put("course", courses.size());
+        count.put("student", numberOfStudent);
+        return count;
     }
 
     @Override
@@ -281,7 +302,9 @@ public class CourseServiceImpl implements CourseService {
             int count = 0;
             Map<Integer, String> map = new LinkedHashMap<>();
             StudentVO student = students.get(i);
-            Report report = reportRepository.findByStudent(student.getId());
+            Presentation presentation = presentationRepository.findByStudentAndSemester(student.getId(),  courseVO.getSemester().getId());
+            Report report = presentation == null? null: reportRepository.findByStudentAndPresentation(student.getId(), presentation.getId());
+            IMark iMark = iMarkRepository.findAllByStudentCodeAndSemester(student.getId(), courseVO.getSemester().getId());
             map.put(count, String.valueOf(i+1));
             count++;
             map.put(count, student.getStudentCode());
@@ -290,6 +313,8 @@ public class CourseServiceImpl implements CourseService {
             count++;
             if(report != null && report.isApproved()){
                 map.put(count, report.getFinalPoint());
+            } else if(iMark != null && iMark.getStatus().equals(IMarkStatus.NEW)){
+                map.put(count,"-1");
             } else {
                 map.put(count, "");
             }

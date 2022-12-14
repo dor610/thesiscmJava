@@ -32,8 +32,18 @@ public class ReportApi {
     }
 
     @GetMapping("/mark")
-    public ResponseEntity<Object> getStudentMark(@RequestParam("student") String student){
-        return new ResponseEntity<>(reportService.getStudentMark(student), HttpStatus.OK);
+    public ResponseEntity<Object> getStudentMark(@RequestParam("student") String student, @RequestParam("semester") String semester){
+        return new ResponseEntity<>(reportService.getStudentMark(student, semester), HttpStatus.OK);
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<Object> getReportByUserAndSemester(@RequestParam("account") String account, @RequestParam("semester") String semester){
+        return new ResponseEntity<>(reportService.getByLecturerAndSemester(account, semester), HttpStatus.OK);
+    }
+
+    @GetMapping("/semester")
+    public ResponseEntity<Object> getReportBySemester(@RequestParam("semester") String semester){
+        return new ResponseEntity<>(reportService.getBySemester(semester), HttpStatus.OK);
     }
 
     @PostMapping("/save")

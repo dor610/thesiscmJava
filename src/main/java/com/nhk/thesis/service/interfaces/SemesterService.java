@@ -25,7 +25,7 @@ public interface SemesterService {
 
     boolean createSemester(long startDate, long endDate, int numberOfWeek, String semesterCode);
 
-    boolean updateSemester(String id, String startDate, String endDate, int numberOfWeek);
+    boolean updateSemester(String id, long startDate, long endDate, int numberOfWeek, String code);
 
     boolean deleteSemester(String id);
 

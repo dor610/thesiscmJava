@@ -38,6 +38,9 @@ public interface PresentationService {
 
     void importData(MultipartFile file) throws IOException, ParseException;
 
+    void start(String presentation);
+
+
     void processData(List<String> data, String dateAndPlace, SemesterVO semester) throws ParseException;
 
     String processEnName(List<String> lst);

@@ -10,7 +10,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 @Configuration
 @EnableWebSocketMessageBroker
-public class WebsocketConfiguration implements WebSocketMessageBrokerConfigurer {
+public class    WebsocketConfiguration implements WebSocketMessageBrokerConfigurer {
 
     private HttpHandshakeInterceptor handshakeInterceptor;
 

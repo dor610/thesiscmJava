@@ -10,9 +10,7 @@ public interface MailService {
 
     public JsonNode sendAccountActivationEmail(User user, String rawPassword) throws  UnirestException;
 
-    public JsonNode sendAccountDisabledEmail() throws UnirestException;
+    public JsonNode sendAccountDisabledEmail(User user) throws UnirestException;
 
-    public JsonNode sendAccountEnableEmail() throws  UnirestException;
-
-    public JsonNode sendPasswordChangedEmail() throws UnirestException;
+    public JsonNode sendAccountEnableEmail(User user) throws  UnirestException;
 }

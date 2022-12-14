@@ -104,4 +104,9 @@ public class TopicApi {
         return new ResponseEntity<>(topicService.search(keyWord), HttpStatus.OK);
     }
 
+    @GetMapping("/test")
+    public void test(){
+        topicService.test();
+    }
+
 }
